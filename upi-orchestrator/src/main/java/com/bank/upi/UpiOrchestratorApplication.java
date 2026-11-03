@@ -1,0 +1,13 @@
+package com.bank.upi;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class UpiOrchestratorApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(UpiOrchestratorApplication.class, args);
+    }
+
+}

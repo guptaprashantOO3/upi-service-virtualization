@@ -1,0 +1,47 @@
+# Maven / Java build output
+**/target/
+**/build/
+**/out/
+*.class
+*.log
+logs/
+
+# Optional Maven Wrapper bootstrap JAR (keep wrapper properties and mvnw scripts)
+.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA and other IDE metadata
+**/.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.factorypath
+.sts4-cache/
+.vscode/
+
+# macOS / OS-generated files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+**/application-local.properties
+**/application-*.local.properties
+**/secrets.*
+**/credentials.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+
+# Temporary files
+*.swp
+*.swo
+*~
