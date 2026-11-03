@@ -1,5 +1,13 @@
 # UPI Service Virtualization & Resilience Testing Platform
 
+<img width="1752" height="897" alt="UPI Service Virtualization Overview" src="https://github.com/user-attachments/assets/911acf86-a8bd-4775-84a4-4518282e1ced" />
+
+## How UPI Service Virtualization Works
+
+<img width="1672" height="941" alt="Explaining UPI Service Virtualisation" src="https://github.com/user-attachments/assets/86ab11b7-8bd7-4e5f-8a1b-2b344f2df845" />
+
+
+
 A local proof of concept for exploring payment orchestration, idempotency, failure injection, timeout recovery, and application-level metrics across two independent Spring Boot services.
 
 This project is a **simulated payment network**. It does not connect to NPCI, banks, UPI rails, or any real payment system. It is not a production UPI implementation.
