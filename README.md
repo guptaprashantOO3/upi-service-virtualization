@@ -67,38 +67,60 @@ flowchart LR
 
 ## End-to-end payment sequence
 
+### End-to-End Payment Sequence
+
+The following sequence diagram illustrates the complete UPI payment lifecycle handled by the UPI Orchestrator.
+
+It covers three major execution paths:
+
+1. **Successful Payment:** The payer bank successfully debits the amount, the UPI switch routes the transaction, and the payee bank confirms the credit.
+2. **Failure and Reversal:** If the payee bank confirms a failed credit, the orchestrator initiates a reversal to refund the payer.
+3. **Timeout and Recovery:** If the payee bank commits the credit but its response times out, the transaction remains `PENDING`. The orchestrator uses a recovery API to query the payee bank's recorded transaction status instead of blindly retrying the credit or initiating an automatic reversal.
+
+This design demonstrates idempotency, failure handling, reversal management, timeout handling, and transaction recovery in a simulated UPI ecosystem.
+
+
 ```mermaid
+
 sequenceDiagram
     autonumber
-    actor Customer
-    participant O as upi-orchestrator :8080
-    participant P as Virtual payer bank :8081
-    participant S as Virtual UPI switch :8081
-    participant B as Virtual payee bank :8081
 
-    Customer->>O: POST /api/payments (idempotencyKey, payer, payee, amount)
+    actor Customer
+    participant O as UPI Orchestrator :8080
+    participant P as Virtual Payer Bank :8081
+    participant S as Virtual UPI Switch :8082
+    participant B as Virtual Payee Bank :8083
+
+    Customer->>O: POST /api/payments
+    Note over O: Validate request and idempotency key
+
     O->>P: POST /virtual/payer/debit
     P-->>O: SUCCESS
+
     O->>S: POST /virtual/switch/route
     S-->>O: SUCCESS + destination bank
+
     O->>B: POST /virtual/payee/credit
 
     alt Normal credit
         B-->>O: HTTP 200 + SUCCESS
         O-->>Customer: SUCCESS
+
     else Confirmed decline or HTTP 503
-        B-->>O: FAILED body or HTTP 503
+        B-->>O: FAILED response
         O->>P: POST /virtual/payer/reverse
         P-->>O: Reversal result
         O-->>Customer: REVERSED or REVERSAL_PENDING
+
     else Timeout after payee commit
-        Note over B: Credit commits before the simulated response delay
+        Note over B: Credit commits before simulated response delay
         B--xO: Response exceeds configured read timeout
-        O-->>Customer: PENDING (no credit retry or automatic reversal)
+        O-->>Customer: PENDING
+
         Customer->>O: POST /api/payments/{transactionId}/recover
         O->>B: GET /virtual/payee/transactions/{transactionId}
         B-->>O: Recorded credit status
-        O-->>Customer: SUCCESS if credit is confirmed; otherwise PENDING
+        O-->>Customer: SUCCESS if confirmed, otherwise PENDING
     end
 ```
 
