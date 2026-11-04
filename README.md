@@ -88,8 +88,8 @@ sequenceDiagram
     actor Customer
     participant O as UPI Orchestrator :8080
     participant P as Virtual Payer Bank :8081
-    participant S as Virtual UPI Switch :8082
-    participant B as Virtual Payee Bank :8083
+    participant S as Virtual UPI Switch :8081
+    participant B as Virtual Payee Bank :8081
 
     Customer->>O: POST /api/payments
     Note over O: Validate request and idempotency key
